@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="id" class="notranslate" translate="no">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="description" content="Personal Silent — e-book personal karya monorogu." />
+  <meta property="og:title" content="Personal Silent — e‑Book" />
+  <meta property="og:description" content="Catatan personal dari monorogu." />
+  <meta property="og:type" content="website" />
+  <title>Personal Silent — e‑Book</title>
+  <style>
+    :root{
+      --bg: #fafafa; --fg:#0a0a0a; --muted:#666; --border:#e6e6e6; --brand:#f59e0b; --card:#ffffff;
+      --code:#1f2937; --quote:#6b7280; --shadow:0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.04);
+    }
+    :root.dark{
+      --bg:#0a0a0a; --fg:#ededed; --muted:#a3a3a3; --border:#252525; --brand:#f59e0b; --card:#111111; --code:#e5e7eb; --quote:#9ca3af; --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.35);
+    }
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.7 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;}
+    .container{max-width:1100px;margin-inline:auto;padding:1rem 1.25rem 4rem}
+    header.site{position:sticky;top:0;z-index:40;background:color-mix(in oklab, var(--bg) 90%, transparent);backdrop-filter:saturate(1.2) blur(8px);border-bottom:1px solid var(--border)}
+    header .row{display:flex;align-items:center;gap:.75rem;padding:.75rem 1.25rem;max-width:1100px;margin-inline:auto}
+    .title{font-weight:700;letter-spacing:.02em}
+    .btn{display:inline-flex;align-items:center;gap:.5rem;border:1px solid var(--border);padding:.5rem .8rem;border-radius:999px;background:var(--card);box-shadow:var(--shadow);cursor:pointer}
+    .btn:where(:hover,:focus-visible){transform:translateY(-1px)}
+    .icon{width:18px;height:18px;display:inline-block}
+    .progress{position:fixed;left:0;top:0;height:3px;background:var(--brand);transform-origin:left center;z-index:50}
+
+    main.grid{display:grid;grid-template-columns:1fr;gap:1.5rem;margin-top:1rem}
+    @media (min-width:960px){main.grid{grid-template-columns:260px 1fr}}
+    aside{position:sticky;top:64px;align-self:start}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow)}
+    .toc{padding:1rem}
+    .toc h3{margin:.25rem 0 .5rem;font-size:.8rem;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+    .toc a{display:block;padding:.4rem .6rem;border-radius:12px;color:inherit;text-decoration:none}
+    .toc a.active{background:color-mix(in oklab, var(--brand) 18%, transparent)}
+    .meta{margin-top:.6rem;color:var(--muted);font-size:.9rem}
+
+    .content{padding:0 .25rem}
+    h2{font-size:2rem;margin:.25rem 0}
+    h3{font-size:1.5rem;margin:2rem 0 .75rem}
+    p{margin:.9rem 0}
+    ol{padding-left:1.25rem;margin:.75rem 0}
+    blockquote{border-left:4px solid var(--border);padding-left:1rem;color:var(--quote);font-style:italic;margin:1rem 0}
+    hr{border:0;border-top:1px solid var(--border);margin:2rem 0}
+
+    footer.site{color:var(--muted);font-size:.95rem;margin-top:2rem}
+
+    /* Print */
+    @page{margin:18mm}
+    @media print{
+      header.site, .progress, aside, .controls, nav.chapter, .print-hide{display:none!important}
+      body{background:white}
+      .container{max-width:none}
+      h2{page-break-before:avoid}
+      article{page-break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress" style="width:0"></div>
+  <header class="site">
+    <div class="row">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5V6a2 2 0 0 1 2-2h9.5a.5.5 0 0 1 .5.5V8h3a1 1 0 0 1 1 1v10.5a.5.5 0 0 1-.5.5H4.5a.5.5 0 0 1-.5-.5Z"/><path d="M6 4v16M8 4v16"/></svg>
+      <div style="flex:1 1 auto">
+        <div class="title">Personal Silent</div>
+      </div>
+      <div class="controls">
+        <button class="btn" id="printBtn" title="Cetak / Simpan PDF">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9V4h12v5M6 18H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-2"/><path d="M18 18v2H6v-2"/></svg>
+          Cetak
+        </button>
+        <button class="btn" id="themeBtn" title="Tema gelap/terang">
+          <svg class="icon" id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9Z"/></svg>
+          Tema
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <main class="grid">
+      <aside>
+        <nav class="card toc" aria-label="Daftar Isi">
+          <h3>Daftar Isi</h3>
+          <a href="#ch1" data-toc>Chapter 1: Akhir dari Kehancuran</a>
+          <a href="#ch2" data-toc>Chapter 2: Lembaran Baru</a>
+          <div class="meta">
+            <div><strong>Penulis:</strong> monorogu</div>
+            <div><strong>Tanggal:</strong> 15 September 2025</div>
+          </div>
+        </nav>
+      </aside>
+
+      <section class="content" aria-label="Isi e-book">
+        <header>
+          <h2>Personal Silent</h2>
+          <p style="color:var(--muted);margin-top:-.25rem">Catatan personal • monorogu • 15 September 2025</p>
+        </header>
+
+        <article id="ch1">
+          <h3>Chapter 1: Akhir dari Kehancuran</h3>
+          <p>Aku duduk di sebuah ruangan elit, segelas teh di tangan, mencoba menikmati ketenangan. Dari balik jendela besar, langit kota tampak seharusnya damai. Namun kenyataannya berbeda: jalanan penuh kekacauan. Warga saling bentrok, dan para pengawas kewalahan menangkap perusuh yang tak henti bermunculan.</p>
+          <p>Aku terdiam, mengamati. Dalam hati, aku tahu keadaan ini tidak bisa dibiarkan. Sebuah sistem baru harus dirancang. solusi agar kota tetap stabil.</p>
+          <p>Di catatan, kutulis lima hal penting:</p>
+          <ol>
+            <li>Membuat sistem seleksi otomatis.</li>
+            <li>Memberikan pemahaman bagi setiap orang yang baru masuk.</li>
+            <li>Menyediakan tahap uji kelayakan melalui praktik membangun.</li>
+            <li>Mengubah sistem moneter agar terhindar dari inflasi.</li>
+            <li>Menjadikan kota ramah bagi publik.</li>
+          </ol>
+          <p>Tak lama, berita muncul di layar. Nilai mata uang RZ jatuh bebas. Inflasi melonjak tinggi hingga nyaris membuatnya tak berarti. Aku sadar, masalah ekonomi ini adalah ancaman serius.</p>
+          <p>Jika semua orang bisa mencetak uang sesuka hati, maka uang itu kehilangan nilainya. Semudah jedotin anvil ke tembok untuk farming uang.</p>
+          <p>Aku lalu merancang sistem baru: hanya bank yang boleh mencetak uang, dengan jumlah terbatas. Dengan begitu, nilai tetap terjaga. Uang itu pun digunakan untuk membayar para pekerja sejati. para builder yang benar-benar bekerja, bukan mereka yang sekadar mencari celah mudah.</p>
+          <p>Selain itu, aku menyusun sistem kesetaraan pekerjaan. Kota tak lagi membutuhkan operator yang berjaga terus-menerus; sistem baru bisa mengatur segalanya. Para king tetap memiliki akses penuh, hanya saja lebih spesifik dan terkendali. Para pengawas dan intel diberi alat baru. fitur untuk menindak perusuh dengan lebih mudah.</p>
+          <p>Namun aku sadar: akar masalah bukan pada sistem, melainkan pada manusia itu sendiri. Karena itulah, seleksi sejak awal sangat penting. Edukasi dari awal akan menentukan apakah seseorang layak menjadi bagian dari kota atau tidak.</p>
+          <p>Setelah berhari-hari menyusun rencana, akhirnya semuanya selesai. Aku berdiri dan mengumumkan rancangan itu kepada warga.</p>
+          <p>Namun, yang kuterima bukan apresiasi. Warga justru menanggapi dengan skeptis, cemooh, bahkan makian. Semua kerja keras terasa sia-sia.</p>
+          <p>Berhari-hari kuhabiskan untuk merancang, tapi hasilnya ditolak mentah-mentah. Dengan hati berat, aku menyerah.</p>
+          <p>Kurobek catatan itu satu per satu, lalu kubakar hingga habis menjadi abu. Tanpa menoleh ke belakang, aku melangkah menjauh dari kota, semakin jauh, hingga tak terlihat lagi.</p>
+          <p>Aku memilih mengasingkan diri. Tak ingin lagi berada di lingkungan yang hanya menambah luka. Kini, aku memilih jalan sendiri, dalam diam.</p>
+          <blockquote>15 September 2025 – akhir dari sebuah komunitas.</blockquote>
+          <hr />
+        </article>
+
+        <article id="ch2">
+          <h3>Chapter 2: Lembaran Baru</h3>
+          <p>Semua telah berubah. Kini aku belajar untuk lebih bijaksana dalam mengambil keputusan, meskipun keputusan itu sebenarnya baik untuk semua. Aku memilih untuk berjalan sendiri. Aku tidak lagi membutuhkan banyak pendamping. Semua yang terjadi sudah cukup menjadi pelajaran bagiku.</p>
+          <p>Namun, rasa sakit itu masih tertinggal. Dikhianati, dibicarakan buruk di belakang layar, dijadikan pusat kesalahan. semua itu meninggalkan luka yang dalam. Karierku seakan hancur hanya karena masalah yang terlihat sepele, tapi berdampak besar.</p>
+          <p>Ini bukan pertama kalinya aku mengalami hal seperti itu. Sudah berkali-kali, dan setiap kali masih ada perasaan yang kupendam. Namun kali ini berbeda. Di saat aku benar-benar jatuh, masih ada dua orang yang bertahan di sisiku. Mereka adalah penyelamatku. Foxino dan Saiga. Aku memberi apresiasi terdalam kepada mereka berdua.</p>
+          <p>Aku sempat bereksperimen: apa yang akan terjadi jika aku keluar dari komunitas? Perlahan, banyak yang ikut pergi. Mereka membicarakan hal buruk tentangku, menilai tanpa tahu seluruh cerita. Namun, ada juga yang tetap bertahan, terutama dua orang yang sudah lama kukenal itu. Kesetiaan mereka menjadi pengingat bahwa tidak semua orang akan meninggalkanmu.</p>
+          <p>Sekarang aku hanya ingin berbuat baik kepada mereka yang masih ada, dan berharap tidak ada lagi masalah buruk di antara kami.</p>
+          <p>Terima kasih. Semua sudah usai. Kini saatnya aku menutup lembar lama yang penuh kecewa dan luka, dan membuka halaman baru tanpa beban itu lagi.</p>
+          <p>Semoga kita semua sukses di jalan masing-masing. Aku selalu berharap yang terbaik untuk apa yang pernah kita bangun dengan susah payah.</p>
+          <p>Sebuah catatan personal dari monorogu.</p>
+          <hr />
+        </article>
+
+        <nav class="chapter print-hide" aria-label="Navigasi bab" style="display:flex;gap:.75rem;flex-wrap:wrap">
+          <a class="btn" href="#ch1">⟵ Sebelumnya</a>
+          <a class="btn" href="#ch2">Berikutnya ⟶</a>
+          <a class="btn" href="#top" id="toTop">Ke atas</a>
+        </nav>
+
+        <footer class="site">
+          <p>© <span id="year"></span> monorogu. E‑book personal untuk dokumentasi perjalanan dan refleksi pribadi.</p>
+          <p class="print-hide">Simpan sebagai PDF: klik <strong>Cetak</strong> di atas, pilih <em>Save as PDF</em>.</p>
+        </footer>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    (function theme(){
+      const root = document.documentElement;
+      const saved = localStorage.getItem('ps:theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if(saved === 'dark' || (!saved && prefersDark)) root.classList.add('dark');
+      document.getElementById('themeBtn').addEventListener('click',()=>{
+        root.classList.toggle('dark');
+        localStorage.setItem('ps:theme', root.classList.contains('dark') ? 'dark':'light');
+        document.getElementById('themeIcon').innerHTML = root.classList.contains('dark')
+          ? '<circle cx="12" cy="12" r="4" />'
+          : '<path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9Z"/>';
+      });
+    })();
+
+    (function printBtn(){
+      document.getElementById('printBtn').addEventListener('click',()=>window.print());
+    })();
+
+    (function year(){ document.getElementById('year').textContent = new Date().getFullYear(); })();
+
+    (function progress(){
+      const bar = document.getElementById('progress');
+      const onScroll = ()=>{
+        const h = document.documentElement;
+        const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight);
+        bar.style.transform = `scaleX(${Math.max(0,Math.min(1,scrolled))})`;
+      };
+      document.addEventListener('scroll', onScroll, {passive:true});
+      onScroll();
+    })();
+
+    (function tocActive(){
+      const links = Array.from(document.querySelectorAll('[data-toc]'));
+      const targets = links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e=>{
+          if(e.isIntersecting){
+            const id = '#' + e.target.id;
+            links.forEach(l=>l.classList.toggle('active', l.getAttribute('href')===id));
+          }
+        });
+      },{rootMargin:'-40% 0px -55% 0px', threshold: [0,1]});
+      targets.forEach(t=>io.observe(t));
+    })();
+
+    (function backToTop(){
+      const btn = document.getElementById('toTop');
+      btn?.addEventListener('click', (e)=>{
+        e.preventDefault();
+        window.scrollTo({top:0, behavior:'smooth'});
+      });
+    })();
+  </script>
+</body>
+</html>
